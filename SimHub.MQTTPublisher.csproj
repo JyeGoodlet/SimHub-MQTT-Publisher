@@ -98,11 +98,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Payload\Car.cs" />
-    <Compile Include="Payload\FlagInformation.cs" />
+    <Compile Include="Payload\PayloadConfig.cs" />
     <Compile Include="Payload\PayloadRoot.cs" />
-    <Compile Include="Payload\TrackInformation.cs" />
-    <Compile Include="Payload\VehicleInformation.cs" />
     <Compile Include="Settings\SimHubMQTTPublisherPluginUI.xaml.cs">
       <DependentUpon>SimHubMQTTPublisherPluginUI.xaml</DependentUpon>
     </Compile>
@@ -128,6 +125,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="payload_config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="sdkmenuicon.png" />
   </ItemGroup>
   <ItemGroup>
@@ -144,10 +144,14 @@
       <Version>12.0.3</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>XCOPY /Y /R "$(TargetDir)\$(TargetName)*" "%25SIMHUB_INSTALL_PATH%25"
-XCOPY /Y /R "$(TargetDir)MQTTnet.dll" "%25SIMHUB_INSTALL_PATH%25"</PostBuildEvent>
+XCOPY /Y /R "$(TargetDir)MQTTnet.dll" "%25SIMHUB_INSTALL_PATH%25"
+XCOPY /Y /R "$(TargetDir)payload_config.json" "%25SIMHUB_INSTALL_PATH%25"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

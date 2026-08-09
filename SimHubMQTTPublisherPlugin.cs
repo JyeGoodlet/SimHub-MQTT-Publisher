@@ -3,8 +3,11 @@ using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Client.Options;
 using Newtonsoft.Json;
+using SimHub.MQTTPublisher.Payload;
 using SimHub.MQTTPublisher.Settings;
 using SimHub.Plugins;
+using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -19,6 +22,8 @@ namespace SimHub.MQTTPublisher
         public SimHubMQTTPublisherPluginSettings Settings;
 
         public SimHubMQTTPublisherPluginUserSettings UserSettings { get; private set; }
+
+        public PayloadConfig PayloadConfig { get; private set; }
 
         private MqttFactory mqttFactory;
         private IMqttClient mqttClient;
@@ -51,9 +56,11 @@ namespace SimHub.MQTTPublisher
         {
             if (data.GameRunning)
             {
+                var payload = PayloadBuilder.Build(data, UserSettings, PayloadConfig);
+
                 var applicationMessage = new MqttApplicationMessageBuilder()
                .WithTopic(Settings.Topic)
-               .WithPayload(JsonConvert.SerializeObject(new Payload.PayloadRoot(data, UserSettings)))
+               .WithPayload(JsonConvert.SerializeObject(payload))
                .Build();
 
                 Task.Run(async () => await mqttClient.PublishAsync(applicationMessage, CancellationToken.None)).Wait();
@@ -97,6 +104,8 @@ namespace SimHub.MQTTPublisher
 
             UserSettings = this.ReadCommonSettings<SimHubMQTTPublisherPluginUserSettings>("UserSettings", () => new SimHubMQTTPublisherPluginUserSettings());
 
+            PayloadConfig = LoadPayloadConfig();
+
             this.mqttFactory = new MqttFactory();
 
             CreateMQTTClient();
@@ -121,6 +130,28 @@ namespace SimHub.MQTTPublisher
             {
                 oldMqttClient.Dispose();
             }
+        }
+
+        private static PayloadConfig LoadPayloadConfig()
+        {
+            var configPath = Path.Combine(
+                Path.GetDirectoryName(typeof(SimHubMQTTPublisherPlugin).Assembly.Location),
+                "payload_config.json");
+
+            if (File.Exists(configPath))
+            {
+                try
+                {
+                    var json = File.ReadAllText(configPath);
+                    return JsonConvert.DeserializeObject<PayloadConfig>(json) ?? PayloadConfig.CreateDefault();
+                }
+                catch (Exception ex)
+                {
+                    SimHub.Logging.Current.Warn($"Failed to load payload_config.json, using defaults: {ex.Message}");
+                }
+            }
+
+            return PayloadConfig.CreateDefault();
         }
     }
 }
