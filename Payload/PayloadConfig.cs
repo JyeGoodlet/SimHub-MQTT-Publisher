@@ -1,54 +1,47 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SimHub.MQTTPublisher.Payload
 {
-    public class PayloadSectionConfig
-    {
-        public HashSet<string> EnabledFields { get; set; } = new HashSet<string>();
-    }
-
     public class PayloadConfig
     {
-        public PayloadSectionConfig PayloadRoot { get; set; } = new PayloadSectionConfig();
-        public PayloadSectionConfig Car { get; set; } = new PayloadSectionConfig();
-        public PayloadSectionConfig FlagInformation { get; set; } = new PayloadSectionConfig();
-        public PayloadSectionConfig TrackInformation { get; set; } = new PayloadSectionConfig();
-        public PayloadSectionConfig VehicleInformation { get; set; } = new PayloadSectionConfig();
+        /// <summary>
+        /// List of fields to include in the MQTT payload. Each entry is either a built-in
+        /// field name ("time", "userId") or any property name on SimHub's StatusDataBase
+        /// (e.g. "SpeedKmh", "Flag_Name"). Add any SimHub property here without code changes.
+        /// </summary>
+        public List<string> Fields { get; set; } = new List<string>();
 
         public static PayloadConfig CreateDefault()
         {
             return new PayloadConfig
             {
-                PayloadRoot = new PayloadSectionConfig
+                Fields = new List<string>
                 {
-                    EnabledFields = new HashSet<string> { "time", "userId", "carState", "flagData" }
-                },
-                Car = new PayloadSectionConfig
-                {
-                    EnabledFields = new HashSet<string>
-                    {
-                        "SpeedKmh", "Rpms", "Clutch", "Throttle", "Brake", "Gear",
-                        "CarCoordinates", "CurrentLapTime", "CarModel", "CarClass",
-                        "EngineIgnitionOn", "EngineStarted"
-                    }
-                },
-                FlagInformation = new PayloadSectionConfig
-                {
-                    EnabledFields = new HashSet<string>
-                    {
-                        "Flag_Name", "Flag_Black", "Flag_Blue", "Flag_Checkered",
-                        "Flag_Yellow", "Flag_Green", "Flag_White", "Flag_Orange"
-                    }
-                },
-                TrackInformation = new PayloadSectionConfig
-                {
-                    EnabledFields = new HashSet<string> { "TrackId", "TrackConfig", "TrackCode", "TrackLength" }
-                },
-                VehicleInformation = new PayloadSectionConfig
-                {
-                    EnabledFields = new HashSet<string> { "CarModel", "CarClass", "CarId", "MaxRpm" }
+                    "time",
+                    "userId",
+                    "SpeedKmh",
+                    "Rpms",
+                    "Clutch",
+                    "Throttle",
+                    "Brake",
+                    "Gear",
+                    "CarCoordinates",
+                    "CurrentLapTime",
+                    "CarModel",
+                    "CarClass",
+                    "EngineIgnitionOn",
+                    "EngineStarted",
+                    "Flag_Name",
+                    "Flag_Black",
+                    "Flag_Blue",
+                    "Flag_Checkered",
+                    "Flag_Yellow",
+                    "Flag_Green",
+                    "Flag_White",
+                    "Flag_Orange"
                 }
             };
         }
     }
 }
+

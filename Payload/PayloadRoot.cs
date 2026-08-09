@@ -1,29 +1,59 @@
 ﻿using GameReaderCommon;
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace SimHub.MQTTPublisher.Payload
 {
-    public class PayloadRoot
+    public static class PayloadBuilder
     {
-        private readonly PayloadSectionConfig _config;
+        private static readonly Dictionary<string, PropertyInfo> _propertyCache = new Dictionary<string, PropertyInfo>();
 
-        public PayloadRoot(GameData data, SimHubMQTTPublisherPluginUserSettings userSettings, PayloadConfig config)
+        /// <summary>
+        /// Builds a flat payload dictionary from the configured field list. Each field name is
+        /// resolved against SimHub's StatusDataBase at runtime via reflection, so any current or
+        /// future SimHub property can be included without code changes.
+        /// Built-in fields: "time" (Unix ms timestamp), "userId".
+        /// </summary>
+        public static Dictionary<string, object> Build(
+            GameData data,
+            SimHubMQTTPublisherPluginUserSettings userSettings,
+            PayloadConfig config)
         {
-            _config = config.PayloadRoot;
-            time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-            carState = new Car(data, config);
-            userId = userSettings.UserId.ToString();
-            flagData = new FlagInformation(data, config);
+            var payload = new Dictionary<string, object>(config.Fields.Count);
+
+            foreach (var field in config.Fields)
+            {
+                if (field == "time")
+                {
+                    payload["time"] = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                    continue;
+                }
+
+                if (field == "userId")
+                {
+                    payload["userId"] = userSettings.UserId.ToString();
+                    continue;
+                }
+
+                var prop = GetProperty(data.NewData, field);
+                if (prop != null)
+                {
+                    payload[field] = prop.GetValue(data.NewData);
+                }
+            }
+
+            return payload;
         }
 
-        public long time { get; set; }
-        public string userId { get; set; }
-        public Car carState { get; set; }
-        public FlagInformation flagData { get; set; }
-
-        public bool ShouldSerializetime() => _config.EnabledFields.Contains("time");
-        public bool ShouldSerializeuserId() => _config.EnabledFields.Contains("userId");
-        public bool ShouldSerializecarState() => _config.EnabledFields.Contains("carState");
-        public bool ShouldSerializeflagData() => _config.EnabledFields.Contains("flagData");
+        private static PropertyInfo GetProperty(object target, string name)
+        {
+            if (!_propertyCache.TryGetValue(name, out var prop))
+            {
+                prop = target.GetType().GetProperty(name, BindingFlags.Public | BindingFlags.Instance);
+                _propertyCache[name] = prop;
+            }
+            return prop;
+        }
     }
 }

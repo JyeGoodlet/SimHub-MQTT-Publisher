@@ -1,40 +1,27 @@
 {
-  "_comment": "Edit this file to control which fields are included in the MQTT payload. Remove a field name from EnabledFields to exclude it.",
-  "PayloadRoot": {
-    "EnabledFields": [ "time", "userId", "carState", "flagData" ]
-  },
-  "Car": {
-    "EnabledFields": [
-      "SpeedKmh",
-      "Rpms",
-      "Clutch",
-      "Throttle",
-      "Brake",
-      "Gear",
-      "CarCoordinates",
-      "CurrentLapTime",
-      "CarModel",
-      "CarClass",
-      "EngineIgnitionOn",
-      "EngineStarted"
-    ]
-  },
-  "FlagInformation": {
-    "EnabledFields": [
-      "Flag_Name",
-      "Flag_Black",
-      "Flag_Blue",
-      "Flag_Checkered",
-      "Flag_Yellow",
-      "Flag_Green",
-      "Flag_White",
-      "Flag_Orange"
-    ]
-  },
-  "TrackInformation": {
-    "EnabledFields": [ "TrackId", "TrackConfig", "TrackCode", "TrackLength" ]
-  },
-  "VehicleInformation": {
-    "EnabledFields": [ "CarModel", "CarClass", "CarId", "MaxRpm" ]
-  }
+  "_comment": "List the SimHub property names to include in the MQTT payload. Add any property from SimHub's StatusDataBase here without code changes. Built-in fields: 'time' (Unix ms timestamp), 'userId'.",
+  "Fields": [
+    "time",
+    "userId",
+    "SpeedKmh",
+    "Rpms",
+    "Clutch",
+    "Throttle",
+    "Brake",
+    "Gear",
+    "CarCoordinates",
+    "CurrentLapTime",
+    "CarModel",
+    "CarClass",
+    "EngineIgnitionOn",
+    "EngineStarted",
+    "Flag_Name",
+    "Flag_Black",
+    "Flag_Blue",
+    "Flag_Checkered",
+    "Flag_Yellow",
+    "Flag_Green",
+    "Flag_White",
+    "Flag_Orange"
+  ]
 }
