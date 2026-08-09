@@ -1,1 +1,0 @@
-﻿namespace SimHub.MQTTPublisher.Payload { }

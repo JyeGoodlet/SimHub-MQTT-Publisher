@@ -98,12 +98,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Payload\Car.cs" />
-    <Compile Include="Payload\FlagInformation.cs" />
     <Compile Include="Payload\PayloadConfig.cs" />
     <Compile Include="Payload\PayloadRoot.cs" />
-    <Compile Include="Payload\TrackInformation.cs" />
-    <Compile Include="Payload\VehicleInformation.cs" />
     <Compile Include="Settings\SimHubMQTTPublisherPluginUI.xaml.cs">
       <DependentUpon>SimHubMQTTPublisherPluginUI.xaml</DependentUpon>
     </Compile>
