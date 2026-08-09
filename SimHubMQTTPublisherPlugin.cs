@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using SimHub.MQTTPublisher.Payload;
 using SimHub.MQTTPublisher.Settings;
 using SimHub.Plugins;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -144,9 +145,9 @@ namespace SimHub.MQTTPublisher
                     var json = File.ReadAllText(configPath);
                     return JsonConvert.DeserializeObject<PayloadConfig>(json) ?? PayloadConfig.CreateDefault();
                 }
-                catch
+                catch (Exception ex)
                 {
-                    SimHub.Logging.Current.Warn("Failed to load payload_config.json, using defaults.");
+                    SimHub.Logging.Current.Warn($"Failed to load payload_config.json, using defaults: {ex.Message}");
                 }
             }
 

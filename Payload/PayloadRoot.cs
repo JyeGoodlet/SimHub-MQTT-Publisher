@@ -1,5 +1,6 @@
 ﻿using GameReaderCommon;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -7,7 +8,7 @@ namespace SimHub.MQTTPublisher.Payload
 {
     public static class PayloadBuilder
     {
-        private static readonly Dictionary<string, PropertyInfo> _propertyCache = new Dictionary<string, PropertyInfo>();
+        private static readonly ConcurrentDictionary<string, PropertyInfo> _propertyCache = new ConcurrentDictionary<string, PropertyInfo>();
 
         /// <summary>
         /// Builds a flat payload dictionary from the configured field list. Each field name is
@@ -48,12 +49,15 @@ namespace SimHub.MQTTPublisher.Payload
 
         private static PropertyInfo GetProperty(object target, string name)
         {
-            if (!_propertyCache.TryGetValue(name, out var prop))
+            return _propertyCache.GetOrAdd(name, key =>
             {
-                prop = target.GetType().GetProperty(name, BindingFlags.Public | BindingFlags.Instance);
-                _propertyCache[name] = prop;
-            }
-            return prop;
+                var prop = target.GetType().GetProperty(key, BindingFlags.Public | BindingFlags.Instance);
+                if (prop == null)
+                {
+                    SimHub.Logging.Current.Warn($"payload_config.json: unknown field '{key}' — not found on {target.GetType().Name}, it will be skipped.");
+                }
+                return prop;
+            });
         }
     }
 }
