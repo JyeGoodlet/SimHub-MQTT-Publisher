@@ -4,8 +4,11 @@ namespace SimHub.MQTTPublisher.Payload
 {
     public class FlagInformation
     {
-        public FlagInformation(GameData data)
+        private readonly PayloadSectionConfig _config;
+
+        public FlagInformation(GameData data, PayloadConfig config)
         {
+            _config = config.FlagInformation;
             this.Flag_Name = data.NewData.Flag_Name;
 			this.Flag_Black = data.NewData.Flag_Black;
 			this.Flag_Blue = data.NewData.Flag_Blue;
@@ -24,5 +27,14 @@ namespace SimHub.MQTTPublisher.Payload
         public int Flag_Green { get; set; }
         public int Flag_White { get; set; }
 		public int Flag_Orange { get; set; }
+
+		public bool ShouldSerializeFlag_Name() => _config.EnabledFields.Contains("Flag_Name");
+		public bool ShouldSerializeFlag_Black() => _config.EnabledFields.Contains("Flag_Black");
+		public bool ShouldSerializeFlag_Blue() => _config.EnabledFields.Contains("Flag_Blue");
+		public bool ShouldSerializeFlag_Checkered() => _config.EnabledFields.Contains("Flag_Checkered");
+		public bool ShouldSerializeFlag_Yellow() => _config.EnabledFields.Contains("Flag_Yellow");
+		public bool ShouldSerializeFlag_Green() => _config.EnabledFields.Contains("Flag_Green");
+		public bool ShouldSerializeFlag_White() => _config.EnabledFields.Contains("Flag_White");
+		public bool ShouldSerializeFlag_Orange() => _config.EnabledFields.Contains("Flag_Orange");
 	}
 }
