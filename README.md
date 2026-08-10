@@ -65,6 +65,10 @@ Set these values in the plugin settings inside SimHub:
 
 The default values are `localhost`, `racing/driver_name`, `admin`, and `admin`.
 
+There is no confirmation that the MQTT settings are correct until the game is running and SimHub starts firing data.
+
+In a future patch, a check button will be added to test the connection.
+
 ### Updating `payload_config.json`
 
 `payload_config.json` controls which SimHub properties are included in the MQTT payload.
@@ -81,9 +85,9 @@ The default values are `localhost`, `racing/driver_name`, `admin`, and `admin`.
 
 If a field name does not exist in SimHub, it will be skipped.
 
-The screenshot below shows the `Available properties` screen in SimHub. You only need the last property section for the payload config.
+![Available properties screen in SimHub](docs/simhub-available-properties.png)
 
-If you add the screenshot to the repository, place it under `docs/` and reference it here.
+You only need the last property section from the `Available properties` list for the payload config.
 
 ### Home Assistant example
 
