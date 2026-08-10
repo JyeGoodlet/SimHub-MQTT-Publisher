@@ -1,6 +1,8 @@
 # SimHub-MQTT-Publisher
 
-A C# application that publishes SimHub telemetry data over MQTT.
+A fork of [SHWotever/SimHub-MQTT-Publisher](https://github.com/SHWotever/SimHub-MQTT-Publisher).
+
+This version exists because I did not want to rebuild the project every time I wanted to add a new SimHub property.
 
 ## Overview
 
@@ -51,6 +53,37 @@ The release zip should contain these files.
 ## Usage
 
 Configure the MQTT connection parameters and start the application to begin publishing SimHub telemetry data.
+
+### Configure MQTT
+
+Set these values in the plugin settings inside SimHub:
+
+- `Server`: your MQTT broker host name or IP address
+- `Topic`: the MQTT topic to publish to
+- `Login`: your MQTT username, if required
+- `Password`: your MQTT password, if required
+
+The default values are `localhost`, `racing/driver_name`, `admin`, and `admin`.
+
+### Updating `payload_config.json`
+
+`payload_config.json` controls which SimHub properties are included in the MQTT payload.
+
+1. Open SimHub and go to `Available properties`.
+2. Search for the property you want to add.
+3. Use only the last section of the path, such as `GameData.IsInPit` or `GameData.PitLimiterOn`.
+4. Open the `payload_config.json` file in your SimHub folder.
+5. Edit the `Fields` array.
+6. Add or remove exact SimHub property names from `StatusDataBase`.
+7. Keep `time` and `userId` if you want the built-in fields.
+8. Save the file.
+9. Restart SimHub so the plugin reloads the updated config and MQTT updates continue.
+
+If a field name does not exist in SimHub, it will be skipped.
+
+The screenshot below shows the `Available properties` screen in SimHub. You only need the last property section for the payload config.
+
+If you add the screenshot to the repository, place it under `docs/` and reference it here.
 
 ### Home Assistant example
 
