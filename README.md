@@ -12,20 +12,41 @@ This project enables real-time streaming of racing simulation telemetry from Sim
 - Real-time data streaming
 - Easy integration with MQTT brokers
 
-## Getting Started
+## Development
 
 ### Prerequisites
 
-- [SimHub](https://www.simhubdash.com/)
+- [SimHub](https://www.simhubdash.com/) installed locally
+- Add the SimHub install folder to the `SIMHUB_INSTALL_PATH` environment variable
 - .NET Framework
 - MQTT broker (e.g., Mosquitto, HiveMQ)
 
-### Installation
+Example on Windows:
 
-1. Clone the repository
-2. Build the project in Visual Studio
-3. Configure your MQTT broker connection settings
-4. Run the application
+```powershell
+setx SIMHUB_INSTALL_PATH "C:\Program Files (x86)\SimHub"
+```
+
+### Build
+
+1. Clone the repository.
+2. Open the solution in Visual Studio.
+3. Build the project in Release or Debug.
+4. Run or debug the plugin from Visual Studio.
+
+## Installation
+
+1. Download the latest release zip from GitHub Releases.
+2. Extract the zip.
+3. Copy these files into your SimHub folder, for example `C:\Program Files (x86)\SimHub`:
+   - `SimHub.MQTTPublisher.dll`
+   - `SimHub.MQTTPublisher.pdb`
+   - `MQTTnet.dll`
+   - `payload_config.json`
+4. Restart SimHub.
+5. Configure your MQTT settings.
+
+The release zip should contain these files.
 
 ## Usage
 
